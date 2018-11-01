@@ -14,3 +14,7 @@
 Route::get('/', function () {
     return view('index');
 });
+Route::get('/produtos', 'ControllerProduto@index');
+Route::get('/categorias', 'ControllerCategoria@index');
+Route::post('/categorias', 'ControllerCategoria@store');
+Route::get('/categorias/nova', 'ControllerCategoria@create');
