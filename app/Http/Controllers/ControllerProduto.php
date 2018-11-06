@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\Produto;
 class ControllerProduto extends Controller
 {
     /**
@@ -13,7 +13,7 @@ class ControllerProduto extends Controller
      */
     public function index()
     {
-        return view ('pagina.produto');
+        return view ('pagina.produto.produto');
     }
 
     /**
@@ -23,7 +23,9 @@ class ControllerProduto extends Controller
      */
     public function create()
     {
-        //
+        $produtos = new Produto();
+        $dados = $produtos::all();
+        return view('pagina.produto.produto_new', compact('dados'));
     }
 
     /**

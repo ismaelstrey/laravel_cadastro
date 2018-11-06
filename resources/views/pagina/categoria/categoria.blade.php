@@ -11,5 +11,10 @@
             </p>
         </div>
     </div>
+    @if (isset($dados))
+    @component('componente.categorias_view',["dados"=>$dados,"edit"=>'edit'])
+    @endcomponent
+    @endif
+
 @endsection
 
