@@ -12,7 +12,7 @@
         </div>
     </div>
     @if (isset($dados))
-    @component('componente.produto_view',["dados"=>$dados,"edit"=>'edit'])
+    @component('componente.produtos_view',["dados"=>$dados])
     @endcomponent
     @endif
 

@@ -7,6 +7,10 @@
                   <thead class="thead-dark center">
                       <tr>
                           <th>Nome</th>
+                          <th>Estoque</th>
+                          <th>Preço</th>
+                          <th>Categoria</th>
+
                           <th>Data de criação</th>
                           <th>Data de Atualização</th>
                           @if (isset($edit))
@@ -19,6 +23,9 @@
                 @foreach ($dados as $dado)
                         <tr class="center">
                             <td scope="row">{{$dado->nome}}</td>
+                            <td scope="row">{{$dado->estoque}}</td>
+                            <td scope="row">{{$dado->preco}}</td>
+                            <td scope="row">{{$dado->categoria_id}}</td>
                             <td>{{$dado->created_at}}</td>
                             <td>{{$dado->updated_at}}</td>
                             @if (isset($edit))
@@ -33,9 +40,9 @@
                  @endforeach
                         <tr class="bg-info">
                                @if (isset($edit))
-                               <td class="center" colspan="5"><strong>Total de registros: <strong class="badge badge-light">{{count($dados)}}</strong></strong></td>
+                               <td class="center" colspan="8"><strong>Total de registros: <strong class="badge badge-light">{{count($dados)}}</strong></strong></td>
                                @else
-                               <td class="center" colspan="4"><strong>Total de registros: <strong class="badge badge-light">{{count($dados)}}</strong></strong></td>
+                               <td class="center" colspan="7"><strong>Total de registros: <strong class="badge badge-light">{{count($dados)}}</strong></strong></td>
                                @endif
                         </tr>
                       </tbody>
