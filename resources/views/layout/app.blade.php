@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{{asset('css/app.css')}}">
@@ -24,5 +24,8 @@
     </main>
 </div>
 <script src="{{asset('js/app.js')}}"></script>
+@hasSection ('javascript')
+@yield('javascript')
+@endif
 </body>
 </html>

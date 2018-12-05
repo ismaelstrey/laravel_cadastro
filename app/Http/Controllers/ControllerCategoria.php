@@ -106,4 +106,12 @@ class ControllerCategoria extends Controller
 
         return($dado->nome);
     }
+
+    public function indexJson()
+    {
+
+        $categorias = new Categoria();
+        $dados = $categorias::all();
+        return json_encode($dados);
+    }
 }

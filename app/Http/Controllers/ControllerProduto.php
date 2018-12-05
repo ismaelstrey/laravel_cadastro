@@ -12,13 +12,18 @@ class ControllerProduto extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function indexView()
     {
         $produtos = new Produto();
         $dados = $produtos::all();
         return view ('pagina.produto.produto', compact('dados'));
     }
-
+ public function index()
+    {
+        $produtos = new Produto();
+        $dados = $produtos::all();
+        return $dados->toJson();
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -43,12 +48,12 @@ class ControllerProduto extends Controller
     {
       $produto = new Produto();
 
-        $produto->nome = $request->input('nomeProduto');
+        $produto->nome = $request->input('nome');
         $produto->estoque = $request->input('estoque');
         $produto->categoria_id = $request->input('categoria_id');
         $produto->preco = $request->input('preco');
         $produto->save();
-        return redirect('produtos');
+        return json_encode($produto);
     }
 
     /**
@@ -82,7 +87,7 @@ class ControllerProduto extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
     }
 
     /**
@@ -93,6 +98,11 @@ class ControllerProduto extends Controller
      */
     public function destroy($id)
     {
-        //
+        $prod = Produto::find($id);
+        if(isset($prod)){
+            $prod->delete();
+            return response('OK', 200);
+        }
+        return response("Produto não encontrado", 404);
     }
 }
