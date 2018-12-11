@@ -7,7 +7,7 @@
           <div class="card-body">
             <h3 class="card-title">Produtos</h3>
             <p class="card-text">Lista de produtos</p>
-            <button type="button" class="btn btn-primary btn-lg float-right" data-toggle="modal" data-target="#dlgProdutos">
+            <button type="button" class="btn btn-primary btn-lg float-right" data-toggle="modal" data-target="#dlgProdutos" onclick="novoProduto()">
                 Novo
                </button>
           </div>
@@ -24,8 +24,6 @@
                 </tr>
             </thead>
             <tbody  id="tabelaProdutos" class="center">
-
-
             </tbody>
         </table>
       </div>
@@ -46,21 +44,22 @@
                     <input type="hidden" name="id" id="id">
                         <div class="form-group">
                         <label for="nome">Nome</label>
-                        <input type="text" class="form-control" name="nome" id="nomeProduto" aria-describedby="helpId" placeholder="Televisor">
+                        <input type="text" class="form-control" name="nome" id="nomeProduto" aria-describedby="helpId">
                     <small id="helpId" class="form-text text-muted">Nome do produto</small>
                 </div>
                 <div class="form-group">
                         <label for="estoque">Estoque</label>
-                        <input type="number" name="estoque" id="estoqueProduto" class="form-control" placeholder="12" aria-describedby="helpId">
+                        <input type="number" name="estoque" id="estoqueProduto" class="form-control"  aria-describedby="helpId">
                         <small id="helpId" class="text-muted">Qantidade de produtos</small>
                       </div>
                     <div class="form-group">
                         <label for="categoria">Categoria</label>
                             <select class="custom-select" id="categoria_id"></select>
+                            <small id="helpId" class="text-muted">Selecione uma categoria</small>
                     </div>
                     <div class="form-group">
                       <label for="preco">Preço</label>
-                      <input type="text" name="preco" id="precoProduto" class="form-control" placeholder="15,00" aria-describedby="helpId">
+                      <input type="text" name="preco" id="precoProduto" class="form-control"aria-describedby="helpId">
                       <small id="helpId" class="text-muted">Preço do produto</small>
                     </div>
             </div>
@@ -73,6 +72,7 @@
         </div>
     </div>
 </div>
+
 
 
 
@@ -89,7 +89,12 @@
             'X-CSRF-TOKEN': "{{csrf_token()}}"
         }
     });
-        function novoProduto(){}
+        function novoProduto(){
+            $("#nomeProduto").val(''),
+            $("#precoProduto").val(''),
+            $("#estoqueProduto").val(''),
+            $("#categoria_id").val('')
+        }
         function montarLinha(p){
             var linha = "<tr id = " + "prod_" + p.id + ">" +
             "<td>" + p.id + "</td>" +
@@ -101,7 +106,7 @@
                 '<button class="btn btn-sm btn-primary ml-2" onclick="editar('+ p.id +')">Editar</button>' +
                 '<button class="btn btn-sm btn-danger ml-2" onclick="remover('+ p.id +')">Apagar</button>' +
              "</td>" +
-            "<tr>";
+            "</tr>";
             return linha;
         }
         // Carregar categorias
@@ -139,6 +144,19 @@
 
                 });
         }
+        // editar
+        function editar(id){
+            $.getJSON('/api/produtos/' + id, function(data) {
+                console.log(data);
+                    $("#id").val(data.id);
+                    $("#nomeProduto").val(data.nome);
+                    $("#precoProduto").val(data.preco);
+                    $("#estoqueProduto").val(data.estoque);
+                    $("#categoria_id").val(data.categoria_id);
+                    $("#dlgProdutos").modal('show');
+            });
+        }
+
         // apagar
         function remover(id){
             $.ajax({
@@ -154,10 +172,49 @@
                 }
             });
         }
+        // salvar produto
+        function salvarProduto(){
+            prod = {
+                id: $("#id").val(),
+                nome: $("#nomeProduto").val(),
+                preco: $("#precoProduto").val(),
+                estoque: $("#estoqueProduto").val(),
+                categoria_id: $("#categoria_id").val()
+                };
+                $.ajax({
+                type: "PUT",
+                url: "/api/produtos/" + prod.id,
+                context: this,
+                data: prod,
+                success: function(data) {
+                    prod = JSON.parse(data);
+                    linhas = $("#tabelaProdutos>tr");
+                    e = linhas.filter( function(i, e) {
+                        return( e.cells[0].textContent == prod.id);
+                    });
+                    if (e){
+                        e[0].cells[0].textContent = prod.id;
+                        e[0].cells[1].textContent = prod.nome;
+                        e[0].cells[2].textContent = prod.estoque;
+                        e[0].cells[3].textContent = prod.preco;
+                        e[0].cells[4].textContent = prod.categoria_id;
+                    }
+                   console.log('Salvou ok');
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+
+        }
         // submit
         $("#formProduto").submit(function(event){
         event.preventDefault();
+        if($("#id").val() != '')
+        salvarProduto();
+        else
         criarProduto();
+
         $("#dlgProdutos").modal('hide');
         });
         $(function(){
